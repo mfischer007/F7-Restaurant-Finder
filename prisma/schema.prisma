@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Restaurant {
+  id               String    @id @default(cuid())
+  providerPrimary  String?
+  providerId       String?   @unique
+  name             String
+  street           String?
+  city             String?
+  state            String?
+  zip              String?
+  country          String   @default("US")
+  latitude         Float
+  longitude        Float
+  formattedAddress String?
+  phonePrimary     String?
+  website          String?
+  ratingAvg        Float?
+  ratingCount      Int?
+  status           String?
+  cuisineTags      String[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  menus            Menu[]
+  hours            Hours?
+  contacts         Contact[]
+  socials          Social[]
+  sources          Source[]
+}
+
+model Menu {
+  id              String   @id @default(cuid())
+  restaurantId    String
+  menuUrl         String
+  menuType        String
+  lastHttpStatus  Int?
+  contentHash     String?
+  firstSeenAt     DateTime @default(now())
+  lastVerifiedAt  DateTime
+
+  restaurant      Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Hours {
+  id             String   @id @default(cuid())
+  restaurantId   String   @unique
+  hoursJson      Json
+  timezone       String?
+  lastVerifiedAt DateTime
+
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model Contact {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  type           String
+  value          String
+  source         String?
+  isPrimary      Boolean  @default(false)
+  firstSeenAt    DateTime @default(now())
+  lastVerifiedAt DateTime
+
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, type, value])
+}
+
+model Social {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  network        String
+  handle         String?
+  url            String
+  firstSeenAt    DateTime @default(now())
+  lastVerifiedAt DateTime
+
+  restaurant     Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, network])
+}
+
+model Source {
+  id           String   @id @default(cuid())
+  restaurantId String
+  provider     String
+  providerId   String?
+  raw          Json?
+  lastSyncedAt DateTime @default(now())
+
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+}
+
+model ZipSearch {
+  id        String   @id @default(cuid())
+  zip       String
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+}
