@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: f7ltd-restaurant-api
+    env: node
+    plan: starter
+    region: oregon
+    buildCommand: |
+      npm install
+      npm run build
+      npx prisma migrate deploy
+      npx prisma generate
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase: f7ltd-db
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: YELP_API_KEY
+        sync: false
+      - key: FOURSQUARE_API_KEY
+        sync: false
+      - key: APP_API_KEYS
+        sync: false
+      - key: APP_PUBLIC_API_KEY
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MIN
+        value: "1"
+      - key: RATE_LIMIT_MAX
+        value: "60"
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /ui
+        destination: /ui/ui.html
+
+databases:
+  - name: f7ltd-db
+    plan: free

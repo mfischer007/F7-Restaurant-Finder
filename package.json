@@ -1,0 +1,42 @@
+{
+  "name": "f7ltd-restaurant-aggregator",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prisma": "prisma",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev --name init",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.11",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "libphonenumber-js": "^1.11.9",
+    "node-cron": "^3.0.3",
+    "pino": "^9.1.0",
+    "pino-http": "^9.0.0",
+    "prisma": "^5.18.0",
+    "radash": "^12.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "tldts": "^6.1.32",
+    "undici": "^6.19.8",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "tsx": "^4.15.7",
+    "typescript": "^5.5.4"
+  }
+}
